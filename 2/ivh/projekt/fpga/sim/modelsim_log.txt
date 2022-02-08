@@ -1,0 +1,179 @@
+# Reading C:/modeltech_6.6d/tcl/vsim/pref.tcl 
+# //  ModelSim SE 6.6d Nov  1 2010 
+# //
+# //  Copyright 1991-2010 Mentor Graphics Corporation
+# //              All Rights Reserved.
+# //
+# //  THIS WORK CONTAINS TRADE SECRET AND 
+# //  PROPRIETARY INFORMATION WHICH IS THE PROPERTY
+# //  OF MENTOR GRAPHICS CORPORATION OR ITS LICENSORS
+# //  AND IS SUBJECT TO LICENSE TERMS.
+# //
+# do sim.fdo 
+# tb.vhd
+# no
+# =============================================================================
+# COMPILE - COMPONENTS
+# =============================================================================
+#   Compile ../../../../../fpga/units/clkgen/clkgen_config.vhd ... Model Technology ModelSim SE vcom 6.6d Compiler 2010.11 Nov  1 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Compiling package clkgen_cfg
+# -- Compiling package body clkgen_cfg
+# -- Loading package clkgen_cfg
+# OK
+#   Compile ../../build/fpga/testled_config.vhd ... Model Technology ModelSim SE vcom 6.6d Compiler 2010.11 Nov  1 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package clkgen_cfg
+# -- Compiling package fpga_cfg
+# -- Compiling package body fpga_cfg
+# -- Loading package fpga_cfg
+# OK
+#   Compile ../../../../../fpga/units/clkgen/clkgen.vhd ... Model Technology ModelSim SE vcom 6.6d Compiler 2010.11 Nov  1 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package numeric_std
+# -- Loading package std_logic_arith
+# -- Loading package clkgen_cfg
+# -- Loading package vcomponents
+# -- Compiling entity clkgen
+# -- Compiling architecture behavioral of clkgen
+# OK
+#   Compile ../../../../../fpga/units/math/math_pack.vhd ... Model Technology ModelSim SE vcom 6.6d Compiler 2010.11 Nov  1 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Compiling package math_pack
+# -- Compiling package body math_pack
+# -- Loading package math_pack
+# OK
+#   Compile ../../../../../fpga/ctrls/spi/spi_adc_entity.vhd ... Model Technology ModelSim SE vcom 6.6d Compiler 2010.11 Nov  1 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Compiling entity spi_adc
+# OK
+#   Compile ../../../../../fpga/ctrls/spi/spi_adc.vhd ... Model Technology ModelSim SE vcom 6.6d Compiler 2010.11 Nov  1 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package math_pack
+# -- Compiling architecture basic of spi_adc
+# -- Loading entity spi_adc
+# OK
+#   Compile ../../../../../fpga/ctrls/spi/spi_adc_autoincr.vhd ... Model Technology ModelSim SE vcom 6.6d Compiler 2010.11 Nov  1 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package math_pack
+# -- Compiling architecture autoincrement of spi_adc
+# -- Loading entity spi_adc
+# OK
+#   Compile ../../../../../fpga/ctrls/spi/spi_reg.vhd ... Model Technology ModelSim SE vcom 6.6d Compiler 2010.11 Nov  1 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Compiling package spi_cfg
+# -- Loading package std_logic_unsigned
+# -- Compiling entity spi_reg
+# -- Compiling architecture beh of spi_reg
+# OK
+#   Compile ../../../../../fpga/ctrls/spi/spi_ctrl.vhd ... Model Technology ModelSim SE vcom 6.6d Compiler 2010.11 Nov  1 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Compiling entity spi_ctrl
+# -- Compiling architecture arch_spi_ctrl2 of spi_ctrl
+# OK
+#   Compile ../../../../../fpga/chips/fpga_xc3s50.vhd ... Model Technology ModelSim SE vcom 6.6d Compiler 2010.11 Nov  1 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Compiling entity fpga
+# OK
+#   Compile ../../../../../fpga/chips/architecture_bare/arch_bare_ifc.vhd ... Model Technology ModelSim SE vcom 6.6d Compiler 2010.11 Nov  1 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package clkgen_cfg
+# -- Loading package fpga_cfg
+# -- Compiling architecture arch_bare_ifc of fpga
+# -- Loading entity fpga
+# -- Loading package numeric_std
+# -- Loading package vcomponents
+# -- Loading entity clkgen
+# OK
+#   Compile ../../../../../fpga/chips/architecture_bare/tlv_bare_ifc.vhd ... Model Technology ModelSim SE vcom 6.6d Compiler 2010.11 Nov  1 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Compiling entity tlv_bare_ifc
+# OK
+#   Compile ../top.vhd ... Model Technology ModelSim SE vcom 6.6d Compiler 2010.11 Nov  1 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Compiling architecture main of tlv_bare_ifc
+# -- Loading entity tlv_bare_ifc
+# OK
+# =============================================================================
+# COMPILE - TESTBENCH
+# =============================================================================
+#   Compile tb.vhd ... Model Technology ModelSim SE vcom 6.6d Compiler 2010.11 Nov  1 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package textio
+# -- Loading package std_logic_textio
+# -- Loading package numeric_std
+# -- Compiling entity testbench
+# -- Compiling architecture behavioral of testbench
+# -- Loading entity fpga
+# OK
+# vsim -t 100ps work.testbench 
+# ** Note: (vsim-3812) Design is being optimized...
+# Loading std.standard
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading std.textio(body)
+# Loading ieee.std_logic_textio(body)
+# Loading ieee.numeric_std(body)
+# Loading work.testbench(behavioral)#1
+# Loading work.clkgen_cfg(body)
+# Loading work.fpga_cfg(body)
+# Loading unisim.vcomponents
+# Loading work.fpga(arch_bare_ifc)#1
+# Loading ieee.vital_timing(body)
+# Loading ieee.vital_primitives(body)
+# Loading unisim.vpkg(body)
+# ** Warning: (vsim-3479) Time unit 'ps' is less than the simulator resolution (100ps).
+#    Time: 0 ps  Iteration: 0  Region: /testbench/uut/dcmclkgen/dcm_inst
+# Loading unisim.dcm(dcm_v)#1
+# Loading unisim.dcm_clock_divide_by_2(dcm_clock_divide_by_2_v)#1
+# Loading unisim.dcm_maximum_period_check(dcm_maximum_period_check_v)#1
+# Loading unisim.dcm_maximum_period_check(dcm_maximum_period_check_v)#2
+# Loading unisim.dcm_clock_lost(dcm_clock_lost_v)#1
+# ** Warning: (vsim-8683) Uninitialized out port /testbench/uut/fpga_inst/kin(3 downto 0) has no driver.
+# This port will contribute value (UUUU) to the signal network.
+#         Region: /testbench
+# ** Warning: (vsim-8683) Uninitialized out port /testbench/uut/fpga_inst/ra(14 downto 0) has no driver.
+# This port will contribute value (UUUUUUUUUUUUUUU) to the signal network.
+#         Region: /testbench
+# ** Warning: (vsim-8683) Uninitialized out port /testbench/uut/fpga_inst/adin has no driver.
+# This port will contribute value (U) to the signal network.
+#         Region: /testbench
+# ** Warning: (vsim-8684) No drivers exist on inout port /testbench/uut/x(4), and its initial value is not used.
+# Therefore, simulation behavior may occur that is not in compliance with
+# the VHDL standard as the initial values come from the base signal /testbench/xbus(4).
+#         Region: /testbench
+#   WARNING : Signal /testbench/uut/fpga_inst/reset doesn't exist
+#   WARNING : Signal /testbench/uut/fpga_inst/clk doesn't exist
+# ** Error:  Simulator Resolution Error :  Simulator resolution is set to a value greater than 1 ps.  In order to simulate the DCM, the simulator resolution must be set to 1ps or smaller 
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/uut/dcmclkgen/dcm_inst
+# 0 ps
+# 10500 us

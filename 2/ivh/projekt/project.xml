@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project outputprefix="proj3">
+
+	<!--  Project description -->
+	<name>IVH proj3 - xharag02</name>
+	<author>Miroslav Harag</author>
+	<authoremail>xharag02@stud.fit.vutbr.cz</authoremail>
+	<revision>20210212</revision>
+	<description>IVH proj3 - xharag02</description>
+
+	<!--  MCU part -->
+	<mcu>
+		<file>main.c</file>
+	</mcu>
+
+	<!-- FPGA part -->
+	<fpga architecture="gp">
+		<file>top.vhd</file>
+		<file>display.vhd</file>
+		<file>counter.vhd</file>
+		<file>cell.vhd</file>
+		<file>fsm.vhd</file>
+		<file>screen_saver.vhd</file>
+		<file>common.vhd</file>
+	</fpga>
+
+</project>

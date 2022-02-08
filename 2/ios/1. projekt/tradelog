@@ -1,0 +1,223 @@
+#!/bin/sh
+
+# tradelog
+# Author: Miroslav Harag (xharag02)
+# Date: 3.4.2021
+
+export POSIXLY_CORRECT=yes
+export LC_NUMERIC="en_US.UTF-8"
+
+#Deafult command to be performed
+COMM='input | filter "DATE_FIRST"'
+#Default time for -a option
+AFTER_DATE="0000-00-00 00:00:00"
+#Default time for -b option
+BEFORE_DATE="9999-99-99 99:99:99"
+#Default histogram scale 
+HIST_WIDTH=1
+#Default graph scale 
+GRAPH_WIDTH=1000
+
+help() {
+    echo "Usage: tradelog [-h|--help] [filter] [command] [file [file [...]]]
+    - With filter you can choose which log should be processed.
+    - With command you can choose which operation should be performed.
+
+    Filter can be combination of following criteries:
+        -a DATETIME         only logs after this time will be processed
+        -b DATETIME         only logs before this time will be processed
+        -t TICKER           only logs covering this ticker will be processed (there can be multiple filters of this type) 
+        -w WIDTH            set width of graph (length of longest line) to specific value 
+
+    Command can be one of the following (when no command is defined, script will only act as filter):
+        list-ticket         return list of every ticker that occures within the set of logs in filtered input
+        profit              return sum of profits from every closed position
+        pos                 reutrn value of evere actually opened position
+        last-price          return last price for every ticker
+        hist-ord            return histogram describing number of transaction belongig to each ticker
+        graph-pos           return graph showing value of every opened position
+
+    File have to be CSV with \";\" used as delimeter. You can use compresed file (.gz) too.
+    Thank you for using tradelog!"
+    exit 1
+}
+
+
+
+while [ $# -gt 0 ] ; do
+    case $1 in
+        "-h"|"--help") help;;
+        "-a") [ "$2" \> "$AFTER_DATE" ] && AFTER_DATE="$2";shift 1;;
+        "-b") [ "$BEFORE_DATE" \> "$2" ] && BEFORE_DATE="$2";shift 1;;
+        "-t") TICKERS="$TICKERS $2 ";shift 1;;
+        "-w") WIDTH="$2";shift 1;;
+        "list-tick")  COMM='input | filter | listTick';;
+        "profit")     COMM='input | filter | profit';;
+        "pos")        COMM='input | filter | sort -t";" -k 2,2 | pos | sort -t";" -k 2 -n -r | findLongestValue | formatOutput';;
+        "last-price") COMM='input | filter | sort -t";" -k 2,2 | lastPrice | sort | findLongestValue | formatOutput';;
+        "hist-ord")   COMM='input | filter | sort -t";" -k 2,2 | countTransaction | findMax | makeGraph $HIST_WIDTH';;
+        "graph-pos")  COMM='input | filter | sort -t";" -k 2,2 | pos | sort -t";" -k 2 -n -r | findMax | makeGraph $GRAPH_WIDTH | sort';;
+        *) SOURCE="$SOURCE $1";; 
+    esac
+    shift 1
+done 
+
+#every other argument will be considered as file
+[ ! -z "$1" ] && SOURCE="$SOURCE $@"
+
+#Commands
+input() {
+    for FILE in $SOURCE; do
+        TYPE=`echo "$FILE" | sed 's/.*\(...\)/\1/'`
+        [ "$TYPE" = ".gz" ] && zcat "$FILE" || cat "$FILE"
+    done
+    #when no source file is defined source is stdin
+    if [ ! "$SOURCE" ]; then 
+        while read line; do
+            echo "$line" 
+        done
+    fi
+}
+filter() {
+    while IFS=';' read -r DATE TICKER TYPE PRICE CURRENCY VOLUME ID
+    do
+        [ "$DATE" \> "$AFTER_DATE" ] || continue
+        [ "$BEFORE_DATE" \>  "$DATE" ] || continue
+        [ "$TICKERS" ] && [ "${TICKERS#*" $TICKER "}" = "$TICKERS" ] && continue
+        echo "$DATE;$TICKER;$TYPE;$PRICE;$CURRENCY;$VOLUME;$ID"
+    done
+}
+# Return sorted list of every ticker
+listTick() {
+    while IFS=';' read -r DATE TICKER TYPE PRICE CURRENCY VOLUME ID; do
+        if [ "${RESULT#*" $TICKER "}" = "$RESULT" ]; then
+            RESULT="$RESULT $TICKER "
+        fi
+    done
+    echo "$RESULT" | sed "s/  /\n/g" | sed "s/ //g" | sort
+}
+# Return total profit from every position. 
+# Input has to be sorted by TICKER
+profit() {
+    RESULT="0.00"
+    while IFS=';' read -r DATE TICKER TYPE PRICE CURRENCY VOLUME ID; do
+        SIGN=`[ "$TYPE" = "buy" ] && echo "-" || echo "+"`
+        RESULT="$RESULT $SIGN $PRICE * $VOLUME"
+    done
+    RES=`echo "scale=2; $RESULT" | bc -s -l`
+    printf "%.2f\n" "$RES"
+}
+# Return value of every opened position
+# Input has to be sorted by TICKER and DATE
+pos() {
+    TOTAL_VOLUME=0
+    ACTUAL_PRICE=0
+    while IFS=';' read -r DATE TICKER TYPE PRICE CURRENCY VOLUME ID; do
+        if [ ! "$TICKER" = "$LAST_TICKER" ] && [ ! -z "$LAST_TICKER" ] ; then
+            VALUE=`echo "scale=2; $TOTAL_VOLUME * $ACTUAL_PRICE" | bc -s`
+            echo "$LAST_TICKER;$VALUE"
+            TOTAL_VOLUME="0"
+        fi
+        [ "$TYPE" = "buy" ] && SIGN="+" || SIGN="-"
+        TOTAL_VOLUME=$(( $TOTAL_VOLUME $SIGN $VOLUME ))
+        LAST_TICKER="$TICKER"
+        ACTUAL_PRICE=$PRICE
+    done
+    VALUE=`echo "scale=2; $TOTAL_VOLUME*$ACTUAL_PRICE" | bc -s`
+    echo "$LAST_TICKER;$VALUE" 
+}
+# Return price from last log for every ticker
+# Input has to be sorted by TICKER and DATE
+lastPrice() {
+    while IFS=';' read -r DATE TICKER TYPE PRICE CURRENCY VOLUME ID; do
+        if [ ! "$TICKER" = "$LAST_TICKER" ] && [ "$LAST_TICKER" ] ; then
+            echo "$LAST_TICKER;$ACTUAL_PRICE"
+        fi
+        LAST_TICKER="$TICKER"
+        ACTUAL_PRICE=$PRICE
+    done
+    echo "$LAST_TICKER;$ACTUAL_PRICE"
+}
+# Return number of logs belonging to every ticker
+# Input has to be sorted by TICKER and DATE
+countTransaction() {
+    NUM_OF_TRAN=0
+    while IFS=';' read -r DATE TICKER TYPE PRICE CURRENCY VOLUME ID; do
+        if [ ! "$TICKER" = "$LAST_TICKER" ] && [ $NUM_OF_TRAN -gt 0 ] ; then
+            echo "$LAST_TICKER;$NUM_OF_TRAN"
+            NUM_OF_TRAN=0
+        fi
+        LAST_TICKER="$TICKER"
+        NUM_OF_TRAN=$(( $NUM_OF_TRAN + 1 ))
+    done
+    echo "$LAST_TICKER;$NUM_OF_TRAN"
+}
+
+
+
+###################
+#Output formatting#
+###################
+
+#findMax will find max value and return absolute value of it on first line
+findMax() {
+    MAX_ABS=0
+    while IFS=';' read -r NAME VALUE; do
+        #RESULT is temp variable for holding input
+        RESULT="$RESULT$NAME;$VALUE\n"
+        VALUE_ABS=`echo "$VALUE" | sed "s/-//"`
+        #substract VALUE from RESULT and check whether result starts with - 
+        CMP=`echo "$VALUE_ABS-$MAX_ABS" | bc -l`
+        [ ${CMP#*"-"} = "$CMP" ] && MAX_ABS=$VALUE_ABS
+    done
+    echo "$MAX_ABS"
+    printf "$RESULT"
+}
+
+#findLongestValue will find longest value and return it on fist line
+findLongestValue() {
+    MAX=0
+    while IFS=';' read -r NAME VALUE; do
+        RESULT="$RESULT$NAME;$VALUE\n"
+        [ ${#VALUE} -ge $MAX ] &&  MAX=${#VALUE}
+    done
+    echo "$MAX"
+    printf "$RESULT"
+
+}
+
+#formatOutput will format(align) output. 
+#On input it expects lenght of longest value and n pairs of "NAME;VALUE".
+formatOutput() {
+    read -r MAX_VALUE
+    while IFS=';' read -r NAME VALUE; do
+        printf "%-10s: %${MAX_VALUE}s\n" "$NAME" "$VALUE"
+    done
+}
+
+#makeGraph will generate graph from output.
+#On input it expects absolute value of bigest VALUE and n pairs "NAME;VALUE"
+makeGraph() {
+    read -r MAX_VALUE
+    #compute scale
+    if [ -z $WIDTH ]; then
+        SCALE=$1
+    else
+        SCALE=`echo "$MAX_VALUE/$WIDTH" | bc -s -l`
+    fi
+
+    while IFS=';' read -r NAME VALUE; do
+        #            compute numbers of rows | adds leading zero to number if its lower than 1 | takes only int part
+        VALUE=`echo "$VALUE / $SCALE" | bc -s -l | sed 's/-\./-0./' | sed 's/^\./0./' | cut -d . -f 1`
+        # positive values gats # and negative !
+        [ $VALUE -ge 0 ] && CHAR="#" || CHAR="!"
+        if [ ! $VALUE -eq 0 ]; then
+            VALUE_FORMATED=" "`printf "%-${VALUE}s\n" " " | sed "s/ /$CHAR/g"`
+        else
+            VALUE_FORMATED=""
+        fi
+        printf "%-10s:%s\n" "$NAME" "$VALUE_FORMATED"
+    done
+}
+
+eval "$COMM"

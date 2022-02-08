@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/FITkit/!svn/ver/427/trunk/apps/demo/led/fpga/sim
+END
+sim.fdo
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/FITkit/!svn/ver/276/trunk/apps/demo/led/fpga/sim/sim.fdo
+END
+isim.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/FITkit/!svn/ver/427/trunk/apps/demo/led/fpga/sim/isim.tcl
+END
+tb.vhd
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/FITkit/!svn/ver/276/trunk/apps/demo/led/fpga/sim/tb.vhd
+END

@@ -1,0 +1,84 @@
+\section{Příklad 5}
+% Jako parametr zadejte skupinu (A-H)
+\patyZadani{G}
+
+\subsection{Zostrojenie diferencialnej rovnice 1. radu}
+
+Vieme ze pre RL obvod platia nasledujuce vztahy.
+
+\begin{align}
+    i_L &= i_R = \frac{u_R}{R} \\
+    u_R + u_L - U &= 0 (2)\\
+    i_L' &= \frac{u_L}{L}, i_L(t) = 0
+\end{align}
+
+Ked $u_R$ zo vztahu (1) dosadime do vztahu (2) a potom $u_L$ zo vztahu (2) dosadime do vztahu (3), 
+dostaneme takuto diferencialnu rovnicu
+
+\begin{align}
+    i_L' = \frac{U - i_L R}{L}  \iff\\
+    i_L' + i_L \frac{R}{L} = \frac{U}{L}
+\end{align}
+
+Rovnica (6) je nehomogenna diferencialna rovnica 1. radu. Mozeme si pomoct ocakavanym riesenim.
+
+\begin{align}
+    i_L(t) = k(t) \cdot e^{\lambda t}
+\end{align}
+
+Substituujeme $i_L' -> \lambda$ a $i_L -> 1$
+
+\begin{align}
+    \lambda  + \frac{R}{L} &= 0 \iff\\
+    \lambda &= -\frac{R}{L}
+\end{align}
+
+Ak teraz dosadime $\lambda$ do ocakavaneho riesenia dostaneme 
+
+\begin{align}
+    i_L(t) = k(t) \cdot e^{-\frac{R}{L}t}
+\end{align}
+
+Rovnicu (9) zderivujeme a $i_L$ spolu s $i_L'$ dosadime do (4)
+
+\begin{align}
+    i_L'(t) &= k'(t) \cdot e^{-\frac{R}{L}t} + k(t) \cdot \frac{-R}{L} \cdot e^{-\frac{R}{L}t}\\
+    k'(t) e^{-\frac{R}{L}t} + k(t) \frac{-R}{L} e^{-\frac{R}{L}t} + \frac{R}{L} k(t) e^{-\frac{R}{L}t} &= \frac{U}{L} \iff\\
+    k'(t) e^{-\frac{R}{L}t} &= \frac{U}{L} \iff\\
+    k'(t) &= \frac{U}{L} e^{\frac{R}{L}t}
+\end{align}
+
+Poslednu rovnicu integrujeme a dostaneme
+
+\begin{align}
+    k(t) &= \frac{U}{R} e^{\frac{R}{L}t} + k
+\end{align}
+
+(14) dosadime do (9) a mame hotove analiticke riesenie.
+
+\begin{align}
+    i_L(t) = (\frac{U}{R} e^{\frac{R}{L}t} + k) \cdot e^{-\frac{R}{L}t} = \frac{U}{L} + k e^{-\frac{R}{L}t}
+\end{align}
+
+Dosadime nase parametre
+
+\begin{align}
+    i_L(t) = \frac{\SI{20}{\volt}}{\SI{25}{\ohm}} + k e^{-\frac{\SI{25}{\ohm}}{\SI{50}{\henry}}t} = \frac{4}{5} + ke^{-2t}(A)
+\end{align}
+
+Po dosadeni pocatocnej podmienky dostaneme aj k
+
+\begin{align}
+    i_L(0) = \SI{8}{\ampere} = \frac{4}{5} + k(A) \impies \\
+    k = \frac{36}{5}
+\end{align}
+
+Ostava nam uz vykonat skusku
+
+\begin{align}
+    i_L(t) &= \frac{4}{5} + \frac{36}{5}e^{-2t} (A) \implies\\
+    i_L'(t) &= -\frac{18}{5}e^{-2t}
+    \\
+    -\frac{18}{5}e^{-2t} +  \frac{1}{2}(\frac{4}{5} + \frac{36}{5}e^{-2t})  &= \frac{2}{5} \iff\\
+    \frac{2}{5} &= \frac{2}{5}
+\end{align}
